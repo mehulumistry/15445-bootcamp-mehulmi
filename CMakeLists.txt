@@ -37,11 +37,14 @@ add_executable(mutex src/mutex.cpp)
 add_executable(scoped_lock src/scoped_lock.cpp)
 add_executable(condition_variable src/condition_variable.cpp)
 add_executable(rwlock src/rwlock.cpp)
+add_executable(cow src/cow.cpp)
+add_executable(mmap src/mmap.cpp)
 
 # Compiling misc executables
 add_executable(wrapper_class src/wrapper_class.cpp)
 add_executable(iterator src/iterator.cpp)
 add_executable(auto src/auto.cpp)
+add_executable(practice src/practice.cpp)
 add_executable(namespaces src/namespaces.cpp)
 
 # Compiling bootcamp demo code

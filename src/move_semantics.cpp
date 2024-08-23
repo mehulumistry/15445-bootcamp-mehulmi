@@ -33,6 +33,10 @@
 // ints. Mainly, vectors take up a non-negligible amount of memory, and are here
 // to show the performance benefits of using std::move.
 #include <vector>
+#include <cmath>
+#include <iomanip>
+#include <iostream>
+
 
 // Function that takes in a rvalue reference as an argument.
 // It seizes ownership of the vector passed in, appends 3 to
@@ -57,6 +61,29 @@ void add_three_and_print(std::vector<int> &&vec) {
     std::cout << item << " ";
   }
   std::cout << "\n";
+}
+
+template <typename T>
+void Swap(T &lhs, T &rhs) {
+  T t = lhs;
+  lhs = rhs;
+  rhs = t;
+}
+
+template <typename T>
+void Swap2(T &lhs, T &rhs) noexcept {
+  using rvalue_ref = typename std::remove_reference<T>::type &&;
+  T t = static_cast<rvalue_ref>(lhs);
+  lhs = static_cast<rvalue_ref>(rhs);
+  rhs = static_cast<rvalue_ref>(t);
+}
+
+// It's like pointer swapping, no need to move or deep copy.
+template <typename T>
+void Swap3(T &lhs, T &rhs) noexcept {
+  T t = std::move(lhs);
+  lhs = std::move(rhs);
+  rhs = std::move(t);
 }
 
 int main() {
@@ -106,5 +133,35 @@ int main() {
   // As seen here, we can print from this array.
   std::cout << "Printing from int_array3: " << int_array3[1] << std::endl;
 
+
+
+  std::vector<int> arrA(1'000'000, 0);
+  std::vector<int> arrB(1'000'000, 0);
+  Swap(arrA, arrB);
+
   return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
