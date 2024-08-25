@@ -39,11 +39,13 @@ add_executable(condition_variable src/condition_variable.cpp)
 add_executable(rwlock src/rwlock.cpp)
 add_executable(cow src/cow.cpp)
 add_executable(mmap src/mmap.cpp)
+add_executable(const src/const.cpp)
 
 # Compiling misc executables
 add_executable(wrapper_class src/wrapper_class.cpp)
 add_executable(iterator src/iterator.cpp)
-add_executable(auto src/auto.cpp)
+add_executable(auto src/auto.cpp
+)
 add_executable(practice src/practice.cpp)
 add_executable(namespaces src/namespaces.cpp)
 

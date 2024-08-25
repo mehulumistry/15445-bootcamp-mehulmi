@@ -43,7 +43,12 @@ private:
 
 // Function that takes in a unique pointer reference and changes its x value to
 // 445.
+// https://www.internalpointers.com/post/move-smart-pointers-and-out-functions-modern-c
 void SetXTo445(std::unique_ptr<Point> &ptr) { ptr->SetX(445); }
+void SetToSomeVal(std::unique_ptr<Point> ptr) {
+  ptr->GetX();
+  ptr->SetX(100);
+}
 
 int main() {
   // This is how to initialize an empty unique pointer of type
@@ -100,5 +105,35 @@ int main() {
   // the ownership of the Point instance has been retained to u4.
   std::cout << "Pointer u4's x value is " << u4->GetX() << std::endl;
 
+  // SetToSomeVal(u3) not allowed because unique pointer cannot be copied
+
+//  You have just moved the ownership of the dynamically-allocated Object from up to the function parameter.
+//	Remember that now up is a hollow object. This is known as a sink: the ownership of the dynamically-allocated resource
+//	flows down an imaginary sink from one point to another;
+//
+//  There's no need to move anything with std::shared_ptr: it can be passed by value (i.e. can be copied).
+//	Just remember that its reference count increases when you do it;
+  SetToSomeVal(std::move(u3));
+
+
   return 0;
 }
+// (1), (2), (3): pass by value to lend the ownership
+
+// A std::unique_ptr can't be passed by value because it can't be copied,
+// so it is usually moved around with the special function std::move from the Standard Library. This is move semantics in action:
+// (4), (5): pass by reference to manipulate the ownership
+
+void f(std::unique_ptr<Point>);    // (1)
+void f(std::shared_ptr<Point>);    // (2)
+void f(std::weak_ptr<Point>);      // (3)
+void f(std::unique_ptr<Point>&);   // (4)
+void f(std::shared_ptr<Point>&);   // (5) also const &
+void f(Point&);                    // (6) also const &
+void f(Point*);                    // (7) also const *
+
+//If you really need to return smart pointers from a function, take it easy and always return by value. That is:
+//
+//std::unique_ptr<Object> getUnique();
+//std::shared_ptr<Object> getShared();
+//std::weak_ptr<Object>   getWeak();

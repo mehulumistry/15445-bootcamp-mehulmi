@@ -90,17 +90,24 @@ int main() {
   // Take this expression. Note that 'a' is a lvalue, since it's a variable that
   // refers to a specific space in memory (where 'a' is stored). 10 is a rvalue.
   int a = 10;
+  int *b = &a;
 
   // Let's see a basic example of moving data from one lvalue to another.
   // We define a vector of integers here.
   std::vector<int> int_array = {1, 2, 3, 4};
 
+  // int_array size is 0, after the below
   // Now, we move the values of this array to another lvalue.
+
+  // std::move is the transfer of ownership from int_array to stealing_ints
+  // std::move is casting lvalue to rvalue and then transferring it to stealing_ints
   std::vector<int> stealing_ints = std::move(int_array);
 
   // Rvalue references are references that refer to the data itself, as opposed
   // to a lvalue. Calling std::move on a lvalue (such as stealing_ints) will
   // result in the expression being cast to a rvalue reference.
+
+  // rvalue_stealing_ints and stealing_ints both have same memory location. std::move is casting lvalue to rvalue.
   std::vector<int> &&rvalue_stealing_ints = std::move(stealing_ints);
 
   // However, note that after this, it is still possible to access the data in

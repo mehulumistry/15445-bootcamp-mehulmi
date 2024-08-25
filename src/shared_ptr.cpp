@@ -34,7 +34,9 @@ private:
 
 // Function that modifies a Point object inside a shared pointer
 // by passing the shared pointer argument as a reference.
-void modify_ptr_via_ref(std::shared_ptr<Point> &point) { point->SetX(15); }
+void modify_ptr_via_ref(std::shared_ptr<Point> &point) {
+  point->SetX(15);
+}
 
 // Function that modifies a Point object inside a shared pointer
 // by passing the shared pointer argument as a rvalue reference.
@@ -123,11 +125,27 @@ int main() {
   // modify s2 by passing a shared pointer as a reference and as a rvalue
   // reference.
   modify_ptr_via_ref(s2);
-  modify_ptr_via_rvalue_ref(std::move(s2));
+  // Named rvalue references behave as lvalues, even though they refer to rvalues.
+  // S9 is lvalue
+  // When you try to pass s9 to the function modify_ptr_via_rvalue_ref,
+  // it is treated as an lvalue because it is a named variable, even though it is declared as an rvalue reference.
+
+  std::shared_ptr<Point> &&s9 = std::move(s2);
+  modify_ptr_via_rvalue_ref(std::move(s9));
 
   // After running this code, s2 should have x = 15 and y = 645.
   std::cout << "Pointer s2 has x=" << s2->GetX() << " and y=" << s2->GetY()
             << std::endl;
+
+  // S2 is empty now. So actual move from s2 to s3 happens when you assign it to other variable.
+  // But if you simply use std::move it'll just give you the rvalue. the value. Nothing else will happen.
+  std::shared_ptr<Point> s10 = std::move(s2);
+  s10->SetX(25);
+  modify_ptr_via_rvalue_ref(std::move(s10));
+
+  // After running this code, s2 should have x = 15 and y = 645.
+//  std::cout << "Pointer s2 has x=" << s2->GetX() << " and y=" << s2->GetY()
+//			<< std::endl;
 
   // Unlike unique pointers, shared pointers can also be passed by value. In
   // this case, the function contains its own copy of a shared pointer, which

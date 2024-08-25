@@ -33,6 +33,10 @@ void call_by_reference(int & p) { // :3
   p = 42;
 }
 
+void call_by_rvalue_reference(int && p) {
+  p = 49;  // Modify the rvalue
+}
+
 // this is the java style of passing references. NULL is called "null" there.
 void call_by_value_special(int *p) { // :4
   *p = 10; // changes what p points to ("what p references" in java)
@@ -85,6 +89,29 @@ int main() {
   call_by_value_special(pointer); // :4, Java does this with object.
   // pointer was copied but what pointer references was changed.
   assert(value == 10 && pointer == &value);
+
+  call_by_rvalue_reference(5);
+
+  // Move semantics on raw pointers is of no use.
+  // Smart pointers has move semantics implemented, Also STL, vectors supports it so when you do below it moves and makes the original pointer null.
+  int *abc = &value;
+  int *bca = std::move(abc);
+
+  call_by_rvalue_reference(std::move(*bca));
+  // How is this working?? you are moving the value pointer
+  // This doesn't move this is just casting the lvalue to rvalue. It'll only move when you
+  assert(value == 49 && pointer == &value);
+
+  // rvalue magic
+//  int& x = 666;       // Error
+
+ // this converts
+  const int& z = 666; // OK
+
+// ... would translate to:
+//  int __internal_unique_name = 10;
+//  const int& ref = __internal_unique_name;
+
   return 0;
 }
 
